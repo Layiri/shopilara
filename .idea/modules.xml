@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../shopify-generating-api-token-guide/.idea/shopify-generating-api-token-guide.iml" filepath="$PROJECT_DIR$/../shopify-generating-api-token-guide/.idea/shopify-generating-api-token-guide.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/shopify_to_laravel.iml" filepath="$PROJECT_DIR$/.idea/shopify_to_laravel.iml" />
     </modules>
   </component>
