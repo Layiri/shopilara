@@ -57,8 +57,6 @@ class ProductsController extends Controller
         dd($response);
 
 //        $jsonData = $response->json();
-
-
 //        dd($jsonData);
 
 

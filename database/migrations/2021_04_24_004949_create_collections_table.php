@@ -17,15 +17,16 @@ class CreateCollectionsTable extends Migration
     public function up()
     {
         Schema::create(self::COLLECTIONS_TABLE, function (Blueprint $table) {
+
+            $table->unsignedBigInteger("id")->index();
             $table->string("body_html"); // description
             $table->string("handle");
             $table->json("image");
-            $table->unsignedBigInteger("id");
-            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
-            $table->string("published_scope");
             $table->string("sort_order");
             $table->string("template_suffix");
             $table->string("title");
+            $table->string("published_scope");
+            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
             $table->string("updated_at");//TODO:: datetime tz or datetime or string ???????????
             $table->unsignedBigInteger("store_id");
             $table->foreign('store_id')

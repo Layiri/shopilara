@@ -21,8 +21,11 @@ class CreateShopifyAuthTable extends Migration
             $table->string("shop_name");
             $table->string("api_key");
             $table->string("scopes");
-            $table->string("redirect_uri");
-            $table->unsignedBigInteger("user_id");
+            $table->string("token");
+            $table->string("shared_secret");
+            $table->string("code");
+            $table->unsignedBigInteger("user_id")->index();
+
             $table->foreign('user_id')
                 ->references('id')
                 ->on(self::USERS_TABLE);

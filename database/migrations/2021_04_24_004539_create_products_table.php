@@ -17,24 +17,26 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create(self::PRODUCTS_TABLE, function (Blueprint $table) {
+
+            $table->unsignedBigInteger("id")->index();
             $table->string("body_html"); // description
-            $table->string("created_at"); //TODO:: datetime tz or datetime or string ???????????
             $table->string("handle");
-            $table->unsignedBigInteger("id");
             $table->json("images");
             $table->json("options");
             $table->string("product_type");
-            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
-            $table->string("published_scope");
             $table->string("status");
             $table->string("tags");
             $table->string("template_suffix");
             $table->string("title");
-            $table->string("updated_at");//TODO:: datetime tz or datetime or string ???????????
             $table->json("variants"); // json
             $table->string("vendor");
 
-            $table->unsignedBigInteger("store_id");
+            $table->string("published_scope");
+            $table->string("created_at"); //TODO:: datetime tz or datetime or string ???????????
+            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
+            $table->string("updated_at");//TODO:: datetime tz or datetime or string ???????????
+
+            $table->unsignedBigInteger("store_id")->index();
             $table->foreign('store_id')
                 ->references('id')
                 ->on(self::SHOPIFY_STORE_AUTH_TABLE);

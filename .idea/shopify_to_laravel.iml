@@ -118,5 +118,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shopify-generating-api-token-guide" />
+    <orderEntry type="module" module-name="argon-dashboard" />
   </component>
 </module>
