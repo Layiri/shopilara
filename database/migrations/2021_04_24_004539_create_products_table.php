@@ -19,10 +19,11 @@ class CreateProductsTable extends Migration
         Schema::create(self::PRODUCTS_TABLE, function (Blueprint $table) {
 
             $table->unsignedBigInteger("id")->index();
-            $table->string("body_html"); // description
+            $table->text("body_html"); // description
             $table->string("handle");
-            $table->json("images");
-            $table->json("options");
+            $table->json("images"); // json
+            $table->json("image"); // json
+            $table->json("options"); // json
             $table->string("product_type");
             $table->string("status");
             $table->string("tags");

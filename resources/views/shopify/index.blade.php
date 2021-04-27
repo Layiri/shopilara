@@ -1,64 +1,78 @@
-@extends('layouts.app')
+<?php
+/**
+ * @var \App\Models\ShopifyAuth $shops
+ */
+?>
 
-@section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Laravel 8 CRUD Example </h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-success" href="" title="Create a product"> <i class="fas fa-plus-circle"></i>
-                </a>
-            </div>
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>ShopiLara</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+
+
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ URL::to('/') }}">ShopiLara</a>
         </div>
-    </div>
-
-    @if ($message = Session::get('success'))
+        <ul class="nav navbar-nav">
+            <li><a href="{{ URL::to('shopify_store') }}">View All Shops</a></li>
+            <li><a href="{{ URL::to('shopify_store/create') }}">Create a shop</a>
+        </ul>
+    </nav>
+    <!-- Success message -->
+    @if(Session::has('success'))
         <div class="alert alert-success">
-            <p></p>
+            {{Session::get('success')}}
         </div>
     @endif
 
-    <table class="table table-bordered table-responsive-lg">
+    <h1>All the Shops</h1>
+
+    @if (Session::has('message'))
+        <div class="alert alert-info">{{ Session::get('message') }}</div>
+    @endif
+
+    <table class="table table-striped table-bordered">
+        <thead>
         <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>description</th>
-            <th>Price</th>
-            <th>Date Created</th>
-            <th>Actions</th>
+            <td>ID</td>
+            <td>Name</td>
+            <td>API Key</td>
+            <td>Scopes</td>
+            <td>Token</td>
+            <td>Shared Secret</td>
+            <td>Code</td>
+            <td>User</td>
+            <td></td>
         </tr>
-        @foreach ($products as $product)
+        </thead>
+        <tbody>
+        @foreach($shops as $key => $value)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $value->id }}</td>
+                <td>{{ $value->shop_name }}</td>
+                <td>{{ $value->api_key }}</td>
+                <td>{{ $value->scopes }}</td>
+                <td>{{ $value->token }}</td>
+                <td>{{ $value->shared_secret }}</td>
+                <td>{{ $value->code }}</td>
+                <td>{{ $value->user_id }}</td>
+                <!-- we will also add show, edit, and delete buttons -->
                 <td>
-                    <form action="" method="POST">
-
-                        <a href="" title="show">
-                            <i class="fas fa-eye text-success  fa-lg"></i>
-                        </a>
-
-                        <a href="">
-                            <i class="fas fa-edit  fa-lg"></i>
-                        </a>
-
-                        @csrf
-                        @method('DELETE')
-
-                        <button type="submit" title="delete" style="border: none; background-color:transparent;">
-                            <i class="fas fa-trash fa-lg text-danger"></i>
-                        </button>
-                    </form>
+{{--                    <a class="btn btn-small btn-success" href="{{ URL::to('shopify_store/' . $value->id) }}">Show</a>--}}
+                    <a class="btn btn-small btn-info" href="{{ URL::to('shopify_store/' . $value->id . '/edit') }}">Edit</a>
+{{--                    <a class="btn btn-small btn-info" href="{{ URL::to('shopify_store/' . $value->id . '/generate_token') }}">Generate Token</a>--}}
+                    <a class="btn btn-small btn-info" href="{{ URL::to('shopify_store/' . $value->id . '/get_data') }}">Get Products and Collections</a>
                 </td>
             </tr>
         @endforeach
+        </tbody>
     </table>
 
-    {!! $products->links() !!}
-
-@endsection
-
+</div>
+</body>
+</html>

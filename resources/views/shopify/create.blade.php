@@ -1,54 +1,70 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@section('content')
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Add New Product</h2>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="" title="Go back"> <i class="fas fa-backward "></i> </a>
-            </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShopiLara create</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+</head>
+
+<body>
+<div class="container mt-5">
+
+    <!-- Success message -->
+    @if(Session::has('success'))
+        <div class="alert alert-success">
+            {{Session::get('success')}}
         </div>
-    </div>
+    @endif
 
+    <!-- Error message -->
     @if ($errors->any())
         <div class="alert alert-danger">
-            <strong>Error!</strong>
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li></li>
+                    <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
-    <form action="" method="POST" >
+
+    <form method="post" action="{{ route('shopify_store.store') }}">
+
+        <!-- CROSS Site Request Forgery Protection -->
         @csrf
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Name:</strong>
-                    <input type="text" name="name" class="form-control" placeholder="Name">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Description:</strong>
-                    <textarea class="form-control" style="height:50px" name="introduction"
-                              placeholder="description"></textarea>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>Price:</strong>
-                    <input type="number" name="price" class="form-control" placeholder="Put the price">
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
+        <div class="form-group">
+            <label>*Shop name</label>
+            <input type="text" class="form-control" name="shop_name" id="shop_name" required>
         </div>
 
+        <div class="form-group">
+            <label>*Api Key</label>
+            <input type="password" class="form-control" name="api_key" id="api_key" required>
+        </div>
+
+        <div class="form-group">
+            <label>Scopes</label>
+            <input type="text" class="form-control" name="scopes" id="scopes">
+        </div>
+
+
+        <div class="form-group">
+            <label>*Shared Secret Key</label>
+            <input type="password" class="form-control" name="shared_secret" id="shared_secret">
+        </div>
+
+        <div class="form-group">
+            <label>*Code</label>
+            <input type="text" class="form-control" name="code" id="code">
+        </div>
+
+        <input type="submit" name="send" value="Submit" class="btn btn-dark btn-block">
     </form>
-@endsection
+</div>
+</body>
+
+</html>

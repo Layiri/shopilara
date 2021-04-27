@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Collect;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class CollectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +14,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(5);
+        $collect = Collect::latest()->paginate(5);
 
-        return view('product.index', compact('products'))
+        return view('collect.index', compact('collect'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
-
     }
 
     /**
@@ -28,7 +27,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('product.create');
+        return view('collect.create');
     }
 
     /**
@@ -44,64 +43,67 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required'
         ]);
-        Product::create($request->all());
-        return redirect()->route('product.index')
-            ->with('success', 'Product was created successfully.');
+
+        Collect::create($request->all());
+
+        return redirect()->route('collect.index')
+            ->with('success', 'Collect was created successfully.');
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Collect  $collect
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function show(Product $product)
+    public function show(Collect $collect)
     {
-        return view('product.show', compact('product'));
+        return view('collect.show', compact('collect'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Collect  $collect
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function edit(Product $product)
+    public function edit(Collect $collect)
     {
-        return view('product.edit', compact('product'));
+        return view('collect.edit', compact('collect'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Collect  $collect
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Collect $collect)
     {
         $request->validate([ //TODO::
             'name' => 'required',
             'description' => 'required',
             'price' => 'required'
         ]);
-        $product->update($request->all());
+        $collect->update($request->all());
 
-        return redirect()->route('product.index')
-            ->with('success', 'Product updated successfully');
+        return redirect()->route('collect.index')
+            ->with('success', 'Collect updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  \App\Models\Collect  $collect
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Product $product)
+    public function destroy(Collect $collect)
     {
-        $product->delete();
-        return redirect()->route('product.index')
-            ->with('success', 'Product was deleted successfully');
+        $collect->delete();
+        return redirect()->route('collect.index')
+            ->with('success', 'Collect was deleted successfully');
+
     }
 }

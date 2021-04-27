@@ -10,6 +10,7 @@ use App\Models\ShopifyAuth;
  * Class ShopifyApi
  * @package App\Helpers
  *
+ * @property ShopifyAuth $shopify
  * @author Layiri Batiene
  * @version 0.1
  */
@@ -46,9 +47,8 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function getAllProducts()
     {
         $results = self::shopify_call($this->shopify, "/admin/products.json", [], 'GET');
-        if ($results['response']) {
-            $products = json_decode($results['response'], TRUE);
-            return $products['products'];
+        if ($results['headers']['status'] == "HTTP/2 200 \r") {
+            return json_decode($results['response'])->products;
         } else {
             return false;
         }
@@ -62,7 +62,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function countOfProducts()
     {
         $count = self::shopify_call($this->shopify, "/admin/api/2021-04/products/count.json", [], 'GET');
-        if ($count['response']) {
+        if ($count['headers']['status'] == "HTTP/2 200 \r") {
             return json_decode($count['response'], TRUE);
         } else {
             return false;
@@ -82,7 +82,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
             "product" => $product
         );
         $result = self::shopify_call($this->shopify, "/admin/api/2021-07/products.json", $query, 'POST');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             return true;
         } else {
             return false;
@@ -101,7 +101,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
             "product" => $product
         );
         $result = self::shopify_call($this->shopify, "/admin/products/" . $product['id'] . ".json", $query, 'PUT');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             return true;
         } else {
             return false;
@@ -117,7 +117,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function deleteProduct(int $product_id)
     {
         $result = self::shopify_call($this->shopify, "/admin/api/2021-07/products/" . $product_id . ".json", [], 'DELETE');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             return true;
         } else {
             return false;
@@ -141,7 +141,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
             ]
         );
         $result = self::shopify_call($this->shopify, "admin/api/2021-04/collects", $query, 'POST');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             $collect = json_decode($result['response'], TRUE);
             return $collect['collect'];
         } else {
@@ -158,7 +158,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function removeProductsFromCollection(int $collect_id)
     {
         $result = self::shopify_call($this->shopify, "/admin/api/2021-04/collects/" . $collect_id . ".json", [], 'DELETE');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             return true;
         } else {
             return false;
@@ -173,7 +173,8 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function getAllCollects()
     {
         $results = self::shopify_call($this->shopify, "/admin/api/2021-04/collects.json", [], 'GET');
-        if ($results['response']) {
+
+        if ($results['headers']['status'] == "HTTP/2 200 \r") {
             $collects = json_decode($results['response'], TRUE);
             return $collects['collects'];
         } else {
@@ -260,6 +261,8 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
             "code" => $this->shopify->code
         );
         $result = self::shopify_call($this->shopify, "/admin/oauth/access_token", $query);
+
+        dd($result['response']);
         if ($result) {
             $result = json_decode($result, true);
             return $result['access_token'];

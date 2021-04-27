@@ -163,8 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
 
-//        ShopifyApi\Providers\ShopifyServiceProvider::class,
-
         /*
          * Package Service Providers...
          */
@@ -230,9 +228,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-
-//        'Shopify' => ShopifyApi\Support\ShopifyFacade::class,
 
     ],
 

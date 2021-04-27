@@ -17,13 +17,13 @@ class CreateShopifyAuthTable extends Migration
     public function up()
     {
         Schema::create(self::SHOPIFY_AUTH_TABLE, function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
             $table->string("shop_name");
             $table->string("api_key");
             $table->string("scopes");
-            $table->string("token");
+            $table->string("token")->nullable();
             $table->string("shared_secret");
-            $table->string("code");
+            $table->string("code")->nullable();
             $table->unsignedBigInteger("user_id")->index();
 
             $table->foreign('user_id')

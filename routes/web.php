@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CollectController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopifyAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +21,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Route::get('/shopify_store/generatetoken/{id}', [ShopifyAuthController::class, 'get_token'])->name('shopify.get_token');
+//Route::get('/shopify_store/getdata/{id}', [ShopifyAuthController::class, 'getdata']);
 
-//Route::get('products', [ProductsController::class, 'index']);
 
-Route::resource('product', ProductController::class);
+//Route::resource('product', ProductController::class);
+//
+//Route::resource('collection', CollectionController::class);
 
-Route::resource('collection', CollectionController::class);
+Route::get('/shopify_store/{id}/generate_token', [ShopifyAuthController::class, 'generate_token']);
+Route::get('/shopify_store/{id}/get_data', [ShopifyAuthController::class, 'get_data']);
+Route::resource('shopify_store', ShopifyAuthController::class);
+//Route::post('/shopify_store/create', [ShopifyAuthController::class, 'store'])->name('shopify.store');
+//Route::post('/shopify_store/edit', [ShopifyAuthController::class, 'edit'])->name('shopify.edit');
+
+
+
+
+Route::resource('collect', CollectController::class);
+
