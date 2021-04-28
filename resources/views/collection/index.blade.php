@@ -1,9 +1,15 @@
 @extends('layouts.app')
+
+@section('carousel')
+Collections
+@endsection
+@section('carousel')
+    @include('layouts.carousel')
+@endsection
+
 @section('content')
     <div class="row">
-
         @foreach ($all_products as $product)
-            {{--                    {{dd()}}--}}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
                     <a href="#"><img class="card-img-top" height="253px" width="144px" src="{{json_decode($product->image)->src}}" alt=""></a>

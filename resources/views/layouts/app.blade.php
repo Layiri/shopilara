@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ShopiLara</title>
+    <title>@yield('title')</title>
 
     <link rel="stylesheet" type="text/css" href="{{asset('ressources/vendor/bootstrap/css/bootstrap.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('ressources/css/shop-homepage.css') }}"/>
@@ -19,8 +19,9 @@
 <!-- Page Content -->
 <div class="container">
 
-    <div class="row">
+    <h1>@yield('title')</h1>
 
+    <div class="row">
     @include('layouts.navbars.sidebar')
     <!-- /.col-lg-3 -->
         <div class="col-lg-9">
@@ -36,20 +37,6 @@
 @include('layouts.footers.footer')
 <!-- /.container -->
 
-
-
-
-{{--    <div class="main-content">--}}
-{{--            @include('layouts.navbars.sidebar')--}}
-{{--            @include('layouts.navbars.nav')--}}
-{{--            @include('content')--}}
-{{--        </div>--}}
-
-{{--        @guest()--}}
-{{--            @include('layouts.footers.guest')--}}
-{{--        @endguest--}}
-
-<!-- Bootstrap core JavaScript -->
 <script src="{{asset('ressources/vendor/jquery/jquery.min.js')}}"></script>
 <script src="{{asset('ressources/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 

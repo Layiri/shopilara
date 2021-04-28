@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    Create a shop
+@endsection
+
 @section('content')
     <form method="post" action="{{ route('shopify_store.store') }}">
 

@@ -1,6 +1,8 @@
 
 @extends('layouts.app')
-
+@section('title')
+    List of shops
+@endsection
 @section('content')
     <!-- Success message -->
     @if(Session::has('success'))

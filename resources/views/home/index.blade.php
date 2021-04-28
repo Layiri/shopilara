@@ -6,7 +6,6 @@
 
 @section('content')
     <div class="row">
-
         @foreach ($all_products as $product)
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
@@ -18,14 +17,9 @@
                         <h5>{{json_decode($product->variants)[0]->price}}грв</h5>
                         <p class="card-text">{{strip_tags(substr($product->body_html, 0, 300))}}</p>
                     </div>
-                    <div class="card-footer">
-                        <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-                    </div>
                 </div>
             </div>
         @endforeach
-
     </div>
     <!-- /.row -->
-
 @endsection

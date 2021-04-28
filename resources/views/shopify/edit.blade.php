@@ -2,6 +2,10 @@
 
 @extends('layouts.app')
 
+@section('title')
+    Edit shop : {{$shopifyAuth['shop_name']}}
+@endsection
+
 @section('content')
     <form method="post" action="{{ route('shopify_store.update', $shopifyAuth['id']) }}">
 
