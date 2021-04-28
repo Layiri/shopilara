@@ -35,7 +35,10 @@ class ShopifyAuthController extends Controller
      */
     public function create()
     {
-        return view('shopify.create');
+        $all_products = Product::all();
+        $all_collections = Collection::all();
+
+        return view('shopify.create', compact('all_products','all_collections'));
 
     }
 
@@ -132,6 +135,10 @@ class ShopifyAuthController extends Controller
             ->with('success', 'Shop was deleted successfully');
     }
 
+    /**
+     * Install and generate new token
+     * @param $id
+     */
     public function install($id)
     {
 
@@ -143,6 +150,10 @@ class ShopifyAuthController extends Controller
         die;
     }
 
+    /**
+     * Generate new token
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function generate_token()
     {
 
@@ -172,6 +183,12 @@ class ShopifyAuthController extends Controller
         }
     }
 
+    /**
+     * Get products, collects and collection from shopify api
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function get_data($id)
     {
         $shopifyAuth = ShopifyAuth::query()->firstWhere("id", "=", $id);

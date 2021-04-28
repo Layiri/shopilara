@@ -8,7 +8,6 @@
     <div class="row">
 
         @foreach ($all_products as $product)
-            {{--                    {{dd()}}--}}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card h-100">
                     <a href="#"><img class="card-img-top" height="253px" width="144px" src="{{json_decode($product->image)->src}}" alt=""></a>
@@ -17,7 +16,7 @@
                             <a href="#">{{$product->title}}</a>
                         </h4>
                         <h5>{{json_decode($product->variants)[0]->price}}грв</h5>
-                        <p class="card-text">{{strip_tags(substr($product->body_html, 0, 500))}}</p>
+                        <p class="card-text">{{strip_tags(substr($product->body_html, 0, 300))}}</p>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>

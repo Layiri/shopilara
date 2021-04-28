@@ -46,9 +46,8 @@ class Collection extends Model
 
     public static function saves($collection, $shopifyAuth)
     {
-//        created_at
-//        dd($collection);
         $check_collection = Collection::query()->firstWhere("id", "=", $collection['id']);
+
         if ($check_collection) {
             $check_collection->id = $collection['id'];
             $check_collection->body_html = $collection['body_html'];

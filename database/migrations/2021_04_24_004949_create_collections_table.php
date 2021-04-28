@@ -19,7 +19,7 @@ class CreateCollectionsTable extends Migration
         Schema::create(self::COLLECTIONS_TABLE, function (Blueprint $table) {
 
             $table->unsignedBigInteger("id")->primary();
-            $table->string("body_html")->nullable(); // description
+            $table->text("body_html")->nullable(); // description
             $table->string("handle")->nullable();
             $table->json("image")->nullable();
             $table->string("sort_order")->nullable();
