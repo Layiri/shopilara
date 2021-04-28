@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.blade2.php')
 
 
 @section('content')

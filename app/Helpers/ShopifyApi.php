@@ -16,9 +16,6 @@ use App\Models\ShopifyAuth;
  */
 class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollection
 {
-    /**
-     * @var ShopifyAuth
-     */
     public $shopify;
 
     /**
@@ -30,10 +27,8 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function getProductById(int $product_id)
     {
         $result = self::shopify_call($this->shopify, "/admin/api/2021-07/products/" . $product_id . ".json", [], 'GET');
-        if ($result['response']) {
-            $products = json_decode($results['response'], TRUE);
-
-            return $result['response'];
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
+            return json_decode($result['response'], TRUE)->product;
         } else {
             return false;
         }
@@ -77,7 +72,6 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
      */
     public function createNewProduct(array $product)
     {
-
         $query = array(
             "product" => $product
         );
@@ -191,7 +185,7 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function countOfCollect()
     {
         $result = self::shopify_call($this->shopify, "/admin/api/2021-04/collects/count.json", [], 'GET');
-        if ($result['response']) {
+        if ($result['headers']['status'] == "HTTP/2 200 \r") {
             $count = json_decode($result['response'], TRUE);
             return $count['count'];
         } else {
@@ -227,10 +221,8 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
     public function getCollectionById(int $collection_id)
     {
         $collection = self::shopify_call($this->shopify, "/admin/api/2021-04/collections/" . $collection_id . ".json", [], 'GET');
-        if ($collection['response']) {
-            return $collection['response'];
-
-            return $collection['response'];
+        if ($collection['headers']['status'] == "HTTP/2 200 \r") {
+            return json_decode($collection['response'], true)['collection'];
 
         } else {
             return false;
@@ -253,20 +245,59 @@ class ShopifyApi extends CallShopifyApi implements IProduct, ICollect, ICollecti
         }
     }
 
-    public function generateToken()
+    /**
+     * install and generate token
+     */
+    public function install()
     {
-        $query = array(
-            "client_id" => $this->shopify->api_key,
-            "client_secret" => $this->shopify->shared_secret,
-            "code" => $this->shopify->code
-        );
-        $result = self::shopify_call($this->shopify, "/admin/oauth/access_token", $query);
+        $redirect_uri = \URL::to('shopify_store/generate_token');
+        $install_url = "https://" . $this->shopify->shop_name . ".myshopify.com/admin/oauth/authorize?client_id=" . $this->shopify->api_key . "&scope=" . $this->shopify->scopes . "&redirect_uri=" . urlencode($redirect_uri);
+        header("Location: " . $install_url);
+    }
 
-        dd($result['response']);
-        if ($result) {
-            $result = json_decode($result, true);
-            return $result['access_token'];
-        } else {
+
+    /**
+     * Generate token for shopify
+     * @param array $params
+     * @return bool|mixed
+     */
+    public function generateToken($params)
+    {
+        try {
+            $hmac = $params['hmac'];
+            $computed_hmac = hash_hmac('sha256', http_build_query($params), $this->shopify->api_secret_key);
+
+//            if (hash_equals($hmac, $computed_hmac)) { // TODO
+                // Set variables for our request
+                $query = array(
+                    "client_id" => $this->shopify->api_key, // Your API key
+                    "client_secret" => $this->shopify->api_secret_key, // Your app credentials (secret key)
+                    "code" => $params['code'] // Grab the access key from the URL
+                );
+
+        // Generate access token URL
+                $access_token_url = "https://" . $params['shop'] . "/admin/oauth/access_token";
+
+
+                // Configure curl client and execute request
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_URL, $access_token_url);
+                curl_setopt($ch, CURLOPT_POST, count($query));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($query));
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                // Store the access token
+                $result = json_decode($result, true);
+
+                return $result['access_token'];
+
+//            }else{ //TODO
+//                return false;
+//            }
+
+        }catch (\Exception $e){
             return false;
         }
     }

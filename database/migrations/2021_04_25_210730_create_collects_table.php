@@ -21,22 +21,22 @@ class CreateCollectsTable extends Migration
     public function up()
     {
         Schema::create(self::COLLECTS_TABLE, function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->index();
-            $table->unsignedBigInteger('collection_id')->index();
-            $table->string('created_at'); //TODO:: datetime tz or datetime or string ???????????
-            $table->integer('position');
-            $table->unsignedBigInteger('product_id')->index();
-            $table->string('sort_value');
-            $table->string('updated_at'); //TODO:: datetime tz or datetime or string ???????????
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('collection_id')->nullable();
+            $table->string('created_at')->nullable(); //TODO:: datetime tz or datetime or string ???????????
+            $table->integer('position')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->string('sort_value')->nullable();
+            $table->string('updated_at')->nullable(); //TODO:: datetime tz or datetime or string ???????????
 
             $table->unsignedBigInteger("store_id");
 
-            $table->foreign('collection_id')
-                ->references('id')
-                ->on(self::SHOPIFY_STORE_AUTH_TABLE);
-            $table->foreign('product_id')
-                ->references('id')
-                ->on(self::SHOPIFY_STORE_AUTH_TABLE);
+//            $table->foreign('collection_id')
+//                ->references('id')
+//                ->on(self::SHOPIFY_STORE_AUTH_TABLE);
+//            $table->foreign('product_id')
+//                ->references('id')
+//                ->on(self::SHOPIFY_STORE_AUTH_TABLE);
             $table->foreign('store_id')
                 ->references('id')
                 ->on(self::SHOPIFY_STORE_AUTH_TABLE);

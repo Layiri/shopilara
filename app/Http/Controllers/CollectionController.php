@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collect;
 use App\Models\Collection;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CollectionController extends Controller
@@ -12,10 +14,18 @@ class CollectionController extends Controller
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($id)
     {
-        $collections = Collection::latest()->paginate(5);
-        return view('collection.index', compact('collections'))
+
+        $all_collections = Collection::all();
+
+        $all_products = \DB::table('collects AS col')
+            ->select('pr.*')
+            ->where("col.collection_id", "=", $id)
+            ->rightJoin("products as pr", 'col.product_id', '=', 'pr.id')
+            ->get();
+
+        return view('collection.index', compact('all_products', 'all_collections'))
             ->with('i', (\request()->input('page', 1) - 1) * 5);
     }
 

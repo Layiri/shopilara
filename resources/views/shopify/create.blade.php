@@ -47,19 +47,13 @@
         </div>
 
         <div class="form-group">
+            <label>*Api Secret Key</label>
+            <input type="password" class="form-control" name="api_secret_key" id="api_secret_key" required>
+        </div>
+
+        <div class="form-group">
             <label>Scopes</label>
             <input type="text" class="form-control" name="scopes" id="scopes">
-        </div>
-
-
-        <div class="form-group">
-            <label>*Shared Secret Key</label>
-            <input type="password" class="form-control" name="shared_secret" id="shared_secret">
-        </div>
-
-        <div class="form-group">
-            <label>*Code</label>
-            <input type="text" class="form-control" name="code" id="code">
         </div>
 
         <input type="submit" name="send" value="Submit" class="btn btn-dark btn-block">

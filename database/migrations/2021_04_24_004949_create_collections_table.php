@@ -18,17 +18,17 @@ class CreateCollectionsTable extends Migration
     {
         Schema::create(self::COLLECTIONS_TABLE, function (Blueprint $table) {
 
-            $table->unsignedBigInteger("id")->index();
-            $table->string("body_html"); // description
-            $table->string("handle");
-            $table->json("image");
-            $table->string("sort_order");
-            $table->string("template_suffix");
-            $table->string("title");
-            $table->string("published_scope");
-            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
-            $table->string("updated_at");//TODO:: datetime tz or datetime or string ???????????
-            $table->unsignedBigInteger("store_id");
+            $table->unsignedBigInteger("id")->primary();
+            $table->string("body_html")->nullable(); // description
+            $table->string("handle")->nullable();
+            $table->json("image")->nullable();
+            $table->string("sort_order")->nullable();
+            $table->string("template_suffix")->nullable();
+            $table->string("title")->nullable();
+            $table->string("published_scope")->nullable();
+            $table->string("published_at")->nullable(); //TODO:: datetime tz or datetime or string ???????????
+            $table->string("updated_at")->nullable();//TODO:: datetime tz or datetime or string ???????????
+            $table->unsignedBigInteger("store_id")->nullable();
             $table->foreign('store_id')
                 ->references('id')
                 ->on(self::SHOPIFY_STORE_AUTH_TABLE);

@@ -69,7 +69,7 @@ class Product extends Model
                 $check_product->body_html = $product->body_html;
                 $check_product->handle = $product->handle;
                 $check_product->images = json_encode($product->images);
-                $check_product->image = json_encode($product->images);
+                $check_product->image = json_encode($product->image);
                 $check_product->options = json_encode($product->options);
                 $check_product->product_type = $product->product_type;
                 $check_product->status = (isset($product->status)) ? $product->status : '1';
@@ -90,7 +90,7 @@ class Product extends Model
                 $product_save->body_html = $product->body_html;
                 $product_save->handle = $product->handle;
                 $product_save->images = json_encode($product->images);
-                $product_save->image = json_encode($product->images);
+                $product_save->image = json_encode($product->image);
                 $product_save->options = json_encode($product->options);
                 $product_save->product_type = $product->product_type;
                 $product_save->status = (isset($product->status)) ? $product->status : '1';

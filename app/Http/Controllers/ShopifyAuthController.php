@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ShopifyApi;
 use App\Models\Collect;
+use App\Models\Collection;
 use App\Models\Product;
 use App\Models\ShopifyAuth;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class ShopifyAuthController extends Controller
@@ -18,9 +18,12 @@ class ShopifyAuthController extends Controller
      */
     public function index()
     {
+        $all_products = Product::all();
+        $all_collections = Collection::all();
+
         $shops = ShopifyAuth::latest()->paginate(5);
 
-        return view('shopify.index', compact('shops'))
+        return view('shopify.index', compact('shops', 'all_products', 'all_collections'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
 
     }
@@ -47,10 +50,10 @@ class ShopifyAuthController extends Controller
         $request->validate([
             'shop_name' => 'required|unique:shopify_auth|max:255',
             'api_key' => 'required',
-            'shared_secret' => 'required'
+            'api_secret_key' => 'required'
         ]);
-        $user_id = \Auth::id();
-        $request->request->add(['user_id' => 1]); // Todo
+//        $user_id = \Auth::id(); // TODO
+        $request->request->add(['user_id' => 1]);
 
         ShopifyAuth::create($request->all());
         return redirect()->route('shopify_store.index')
@@ -70,28 +73,17 @@ class ShopifyAuthController extends Controller
 
     }
 
-//    /**
-//     * Show the form for editing the specified resource.
-//     *
-//     * @param \App\Models\ShopifyAuth $shopifyAuth
-//     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-//     */
-//    public function edit(ShopifyAuth $shopifyAuth)
-//    {
-//        dd($shopifyAuth);
-//        return view('shopify.edit', compact('shopifyAuth'));
-//    }
-
-
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit($id)
     {
         $shopifyAuth = ShopifyAuth::query()->firstWhere("id", "=", $id)->getAttributes();
+        $all_products = Product::all();
+        $all_collections = Collection::all();
 
-//        if ($shopifyAuth['id'] === 1) {
-
-        return view('shopify.edit', compact('shopifyAuth'));
-//        } else
-//            return redirect('shopify_store.index')->with('error', 'You are not authorized to do that');
+        return view('shopify.edit', compact('shopifyAuth','all_products','all_collections'));
     }
 
 
@@ -108,7 +100,7 @@ class ShopifyAuthController extends Controller
         $request->validate([
             'shop_name' => 'required|max:255',
             'api_key' => 'required',
-            'shared_secret' => 'required'
+            'shared_secret' => 'api_secret_key'
         ]);
 
 
@@ -117,8 +109,7 @@ class ShopifyAuthController extends Controller
         $shopifyAuth->setAttribute('shop_name', $request->request->get('shop_name'));
         $shopifyAuth->setAttribute('api_key', $request->request->get('api_key'));
         $shopifyAuth->setAttribute('scopes', $request->request->get('scopes'));
-        $shopifyAuth->setAttribute('shared_secret', $request->request->get('shared_secret'));
-        $shopifyAuth->setAttribute('code', $request->request->get('code'));
+        $shopifyAuth->setAttribute('api_secret_key', $request->request->get('api_secret_key'));
         $shopifyAuth->setAttribute('user_id', 1);
 //        $shopifyAuth->setAttribute('user_id', $user_id); // TODO
         $shopifyAuth->save();
@@ -141,23 +132,44 @@ class ShopifyAuthController extends Controller
             ->with('success', 'Shop was deleted successfully');
     }
 
-    public function generate_token($id)
+    public function install($id)
     {
 
         $shopifyAuth = ShopifyAuth::query()->firstWhere("id", "=", $id);
+        $install = new ShopifyApi();
+        $install->shopify = $shopifyAuth;
 
-//        $shopifyAuth->code;
-//        $shop_name = $shopifyAuth->shop_name;
-//        $api_key = $shopifyAuth->api_key;
-//        $scopes = $shopifyAuth->scopes;
-//        $token = $shopifyAuth->getAttribute();
-        $token = ShopifyAuth::generate_token($shopifyAuth);
+        $install->install();
+        die;
+    }
 
-//        $shared_secret = $shopifyAuth->shared_secret;
-//        $code = $shopifyAuth->code;
-//        $user_id = $shopifyAuth->user_id;
+    public function generate_token()
+    {
+
+        $params = $_GET;
+        $shop_name = explode('.', $params['shop']);
+        $shopify = ShopifyAuth::query()->firstWhere('shop_name', '=', $shop_name);
 
 
+        if ($shopify) {
+            $generate_token = new ShopifyApi();
+            $generate_token->shopify = $shopify;
+            $token = $generate_token->generateToken($params);
+            if ($token) {
+                $shopify->setAttribute('token', $token);
+                $shopify->save();
+                return redirect()->route('shopify_store.index')
+                    ->with('success', 'Token was successfully generated');
+            } else {
+                return redirect()->route('shopify_store.index')
+                    ->with('error', 'Error to generate token');
+
+            }
+
+        } else {
+            return redirect()->route('shopify_store.index')
+                ->with('error', 'Error to generate token');
+        }
     }
 
     public function get_data($id)
@@ -166,12 +178,19 @@ class ShopifyAuthController extends Controller
         $api = new ShopifyApi();
         $api->shopify = $shopifyAuth;
 
-//        $products = $api->getAllProducts();
-//        Product::saves($products, $shopifyAuth);
+        $products = $api->getAllProducts();
+        Product::saves($products, $shopifyAuth);
 
         $collects = $api->getAllCollects();
         Collect::saves($collects, $shopifyAuth);
 
+        foreach ($collects as $collect) {
+            $collections = $api->getCollectionById($collect['collection_id']);
+            Collection::saves($collections, $shopifyAuth);
+        }
+
+        return redirect()->route('shopify_store.index')
+            ->with('success', 'All data was uploaded to database successfully.');
     }
 
 

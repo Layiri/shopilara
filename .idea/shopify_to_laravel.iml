@@ -119,5 +119,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shopify-generating-api-token-guide" />
     <orderEntry type="module" module-name="argon-dashboard" />
+    <orderEntry type="module" module-name="startbootstrap-shop-homepage-gh-pages" />
   </component>
 </module>

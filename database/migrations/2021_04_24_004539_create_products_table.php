@@ -18,26 +18,26 @@ class CreateProductsTable extends Migration
     {
         Schema::create(self::PRODUCTS_TABLE, function (Blueprint $table) {
 
-            $table->unsignedBigInteger("id")->index();
-            $table->text("body_html"); // description
-            $table->string("handle");
-            $table->json("images"); // json
-            $table->json("image"); // json
-            $table->json("options"); // json
-            $table->string("product_type");
-            $table->string("status");
-            $table->string("tags");
-            $table->string("template_suffix");
-            $table->string("title");
-            $table->json("variants"); // json
-            $table->string("vendor");
+            $table->unsignedBigInteger("id")->primary();
+            $table->text("body_html")->nullable(); // description
+            $table->string("handle")->nullable();
+            $table->json("images")->nullable(); // json
+            $table->json("image")->nullable(); // json
+            $table->json("options")->nullable(); // json
+            $table->string("product_type")->nullable();
+            $table->string("status")->nullable();
+            $table->string("tags")->nullable();
+            $table->string("template_suffix")->nullable();
+            $table->string("title")->nullable();
+            $table->json("variants")->nullable(); // json
+            $table->string("vendor")->nullable();
 
-            $table->string("published_scope");
+            $table->string("published_scope")->nullable();
             $table->string("created_at"); //TODO:: datetime tz or datetime or string ???????????
-            $table->string("published_at"); //TODO:: datetime tz or datetime or string ???????????
-            $table->string("updated_at");//TODO:: datetime tz or datetime or string ???????????
+            $table->string("published_at")->nullable(); //TODO:: datetime tz or datetime or string ???????????
+            $table->string("updated_at")->nullable();//TODO:: datetime tz or datetime or string ???????????
 
-            $table->unsignedBigInteger("store_id")->index();
+            $table->unsignedBigInteger("store_id")->index()->nullable();
             $table->foreign('store_id')
                 ->references('id')
                 ->on(self::SHOPIFY_STORE_AUTH_TABLE);

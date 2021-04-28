@@ -14,8 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $api_key
  * @property string $scopes
  * @property string $token
- * @property string $shared_secret
- * @property string $code
+ * @property string $api_secret_key
  * @property int  user_id
  *
  * @property User $user
@@ -28,16 +27,6 @@ class ShopifyAuth extends Model
 
     protected $table = "shopify_auth";
 
-    public $fillable = ['shop_name', 'api_key', 'scopes', 'token', 'shared_secret','code', "user_id"];
+    public $fillable = ['shop_name', 'api_key', 'scopes', 'token', 'api_secret_key', "user_id"];
 
-
-//    /**
-//     * @param ShopifyAuth $shopify
-//     */
-//    public static function generate_token($shopify){
-//        $token_call = new ShopifyApi();
-//        $token_call->shopify  = $shopify;
-//        $token = $token_call->generateToken();
-//        dd($token);
-//    }
 }

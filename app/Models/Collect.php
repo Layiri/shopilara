@@ -17,8 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $store_id
  *
  *
- * @property Collection $collection
- * @property Product $product
  * @property ShopifyAuth $store
  *
  * @package App\Models
@@ -40,50 +38,31 @@ class Collect extends Model
         'store_id'
     ];
 
-    public static function saves($products, $shopifyAuth)
+    public static function saves($collects, $shopifyAuth)
     {
-        foreach ($products as $product) {
-            $check_product = Product::query()->firstWhere("id", "=", $product->id);
-            if ($check_product) {
-                $check_product->body_html = $product->body_html;
-                $check_product->handle = $product->handle;
-                $check_product->images = json_encode($product->images);
-                $check_product->image = json_encode($product->images);
-                $check_product->options = json_encode($product->options);
-                $check_product->product_type = $product->product_type;
-                $check_product->status = (isset($product->status)) ? $product->status : '1';
-                $check_product->tags = $product->tags;
-                $check_product->template_suffix = $product->template_suffix;
-                $check_product->title = $product->title;
-                $check_product->variants = json_encode($product->variants);
-                $check_product->vendor = $product->vendor;
-                $check_product->published_scope = $product->published_scope;
-                $check_product->created_at = $product->created_at;
-                $check_product->published_at = $product->published_at;
-                $check_product->updated_at = $product->updated_at;
-                $check_product->store_id = $shopifyAuth->id;
-                $check_product->save();
+        foreach ($collects as $collect) {
+            $check_collect = Collect::query()->firstWhere("id", "=", $collect['id']);
+            if ($check_collect) {
+                $check_collect->id = $collect['id'];
+                $check_collect->collection_id = $collect['collection_id'];
+                $check_collect->created_at = $collect['created_at'];
+                $check_collect->position = $collect['position'];
+                $check_collect->product_id = $collect['product_id'];
+                $check_collect->sort_value = $collect['sort_value'];
+                $check_collect->updated_at = $collect['updated_at'];
+                $check_collect->store_id = $shopifyAuth->id;
+                $check_collect->save();
             } else {
-                $product_save = new Product();
-                $product_save->id = $product->id;
-                $product_save->body_html = $product->body_html;
-                $product_save->handle = $product->handle;
-                $product_save->images = json_encode($product->images);
-                $product_save->image = json_encode($product->images);
-                $product_save->options = json_encode($product->options);
-                $product_save->product_type = $product->product_type;
-                $product_save->status = (isset($product->status)) ? $product->status : '1';
-                $product_save->tags = $product->tags;
-                $product_save->template_suffix = $product->template_suffix;
-                $product_save->title = $product->title;
-                $product_save->variants = json_encode($product->variants);
-                $product_save->vendor = $product->vendor;
-                $product_save->published_scope = $product->published_scope;
-                $product_save->created_at = $product->created_at;
-                $product_save->published_at = $product->published_at;
-                $product_save->updated_at = $product->updated_at;
-                $product_save->store_id = $shopifyAuth->id;
-                $product_save->save();
+                $collect_save = new Collect();
+                $collect_save->id = $collect['id'];
+                $collect_save->collection_id = $collect['collection_id'];
+                $collect_save->created_at = $collect['created_at'];
+                $collect_save->position = $collect['position'];
+                $collect_save->product_id = $collect['product_id'];
+                $collect_save->sort_value = $collect['sort_value'];
+                $collect_save->updated_at = $collect['updated_at'];
+                $collect_save->store_id = $shopifyAuth->id;
+                $collect_save->save();
             }
         }
 

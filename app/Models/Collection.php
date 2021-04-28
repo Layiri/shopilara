@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * This is the model class for table "collections".
-
  * @property int $id
  * @property string $body_html
  * @property string $handle
@@ -28,19 +27,59 @@ class Collection extends Model
 {
     use HasFactory;
 
-
-
     protected $table = 'collections';
-    public $timestamps = true;
+    public $timestamps = false;
 
-    protected $casts = [
-        'price' => 'float'
+    protected $fillable = [
+        'id',
+        'body_html',
+        'handle',
+        'image',
+        'sort_order',
+        'template_suffix',
+        'title',
+        'published_scope',
+        'published_at',
+        'updated_at',
+        'store_id'
     ];
 
-    protected $fillable=[
-        'name',
-        'description',
-        'price',
-        'created_at'
-    ];
+    public static function saves($collection, $shopifyAuth)
+    {
+//        created_at
+//        dd($collection);
+        $check_collection = Collection::query()->firstWhere("id", "=", $collection['id']);
+        if ($check_collection) {
+            $check_collection->id = $collection['id'];
+            $check_collection->body_html = $collection['body_html'];
+            $check_collection->handle = $collection['handle'];
+            $check_collection->image = (isset($collection['image'])) ? json_encode($collection['image']) : '{}';
+            $check_collection->sort_order = $collection['sort_order'];
+            $check_collection->template_suffix = $collection['template_suffix'];
+            $check_collection->title = $collection['title'];
+            $check_collection->published_scope = $collection['published_scope'];
+            $check_collection->published_at = $collection['published_at'];
+            $check_collection->updated_at = $collection['updated_at'];
+            $check_collection->store_id = $shopifyAuth->id;
+            $check_collection->save();
+        } else {
+            $collection_save = new Collection();
+            $collection_save->id = $collection['id'];
+            $collection_save->body_html = $collection['body_html'];
+            $collection_save->handle = $collection['handle'];
+            $collection_save->image = (isset($collection['image'])) ? json_encode($collection['image']) : '{}';
+            $collection_save->sort_order = $collection['sort_order'];
+            $collection_save->template_suffix = $collection['template_suffix'];
+            $collection_save->title = $collection['title'];
+            $collection_save->published_scope = $collection['published_scope'];
+            $collection_save->published_at = $collection['published_at'];
+            $collection_save->updated_at = $collection['updated_at'];
+            $collection_save->store_id = $shopifyAuth->id;
+            $collection_save->save();
+        }
+
+        return true;
+    }
+
+
 }
