@@ -38,7 +38,7 @@ class ShopifyAuthController extends Controller
         $all_products = Product::all();
         $all_collections = Collection::all();
 
-        return view('shopify.create', compact('all_products','all_collections'));
+        return view('shopify.create', compact('all_products', 'all_collections'));
 
     }
 
@@ -86,7 +86,7 @@ class ShopifyAuthController extends Controller
         $all_products = Product::all();
         $all_collections = Collection::all();
 
-        return view('shopify.edit', compact('shopifyAuth','all_products','all_collections'));
+        return view('shopify.edit', compact('shopifyAuth', 'all_products', 'all_collections'));
     }
 
 
@@ -191,23 +191,31 @@ class ShopifyAuthController extends Controller
      */
     public function get_data($id)
     {
-        $shopifyAuth = ShopifyAuth::query()->firstWhere("id", "=", $id);
-        $api = new ShopifyApi();
-        $api->shopify = $shopifyAuth;
+        try {
+            $shopifyAuth = ShopifyAuth::query()->firstWhere("id", "=", $id);
+            $api = new ShopifyApi();
+            $api->shopify = $shopifyAuth;
 
-        $products = $api->getAllProducts();
-        Product::saves($products, $shopifyAuth);
+            $products = $api->getAllProducts();
+            Product::saves($products, $shopifyAuth);
 
-        $collects = $api->getAllCollects();
-        Collect::saves($collects, $shopifyAuth);
+            $collects = $api->getAllCollects();
+            Collect::saves($collects, $shopifyAuth);
 
-        foreach ($collects as $collect) {
-            $collections = $api->getCollectionById($collect['collection_id']);
-            Collection::saves($collections, $shopifyAuth);
+            foreach ($collects as $collect) {
+                $collections = $api->getCollectionById($collect['collection_id']);
+                Collection::saves($collections, $shopifyAuth);
+            }
+            return redirect()->route('shopify_store.index')
+                ->with('success', 'All data was uploaded to database successfully.');
+
+        } catch (\Exception $e) {
+            return redirect()->route('shopify_store.index')
+                ->with('error', 'All data was\'t uploaded to database.');
+
         }
 
-        return redirect()->route('shopify_store.index')
-            ->with('success', 'All data was uploaded to database successfully.');
+
     }
 
 
